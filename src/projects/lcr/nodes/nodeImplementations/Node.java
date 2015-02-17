@@ -20,6 +20,8 @@ public class Node extends sinalgo.nodes.Node {
 	private int colorID = -1;
 	private boolean root = false; //verifier si je suis root.
 	
+	private int[] arrayColor = new int[5];
+	
 	//记录比自己uid大的邻居的数目
 	private int nbGranVoisin=2;
 	//记录有几个邻居选择了颜色
@@ -71,6 +73,8 @@ public class Node extends sinalgo.nodes.Node {
 	}
 	
 	private void treat(ColorMessage msg){
+		//si je suis root
+		
 		
 	}
 		
