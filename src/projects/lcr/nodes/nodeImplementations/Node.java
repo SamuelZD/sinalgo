@@ -18,6 +18,7 @@ public class Node extends sinalgo.nodes.Node {
 	static final int MAX_UIN = 10000;
 	private int myUin;
 	private int colorID = 0;
+	private boolean root = false; //verifier si je suis root.
 	
 	//记录比自己uid大的邻居的数目
 	private int nbGranVoisin=2;
@@ -63,6 +64,7 @@ public class Node extends sinalgo.nodes.Node {
 		System.out.println(this + " receives uin " + uin);
 		if (uin == myUin) {
 			this.setColor(Color.BLUE);
+			this.root = true;
 			System.out.println(this + " is the leader");
 		} else if (uin > myUin) {
 			System.out.println(this + " forwards " + uin);
