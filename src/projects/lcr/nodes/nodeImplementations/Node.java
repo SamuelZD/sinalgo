@@ -17,7 +17,7 @@ public class Node extends sinalgo.nodes.Node {
 	
 	static final int MAX_UIN = 10000;
 	private int myUin;
-	private int colorID = 0;
+	private int colorID = -1;
 	private boolean root = false; //verifier si je suis root.
 	
 	//记录比自己uid大的邻居的数目
@@ -48,8 +48,26 @@ public class Node extends sinalgo.nodes.Node {
 		
 	}
 	
+	
+	/**
+	 * @bref chosir le sens de circle
+	 * @param msg  SensMessage pour controler
+	 */
 	private void treat(SensMessage msg){
-		
+		//si je suis root
+		if(this.root){
+			Node node = msg.getNodeReponse();
+			this.send(new ColorMessage(this.myUin, this.colorID), node);
+		}
+		//je ne suis pas le root
+		else{
+			//seule les voisin de distance 1 du root peut traiter et l'envoie
+			if(msg.getFois()==1){
+				msg.setFois();
+				msg.setnodeRequest(this);
+				this.broadcast(msg);
+			}
+		}
 	}
 	
 	private void treat(ColorMessage msg){
@@ -65,6 +83,9 @@ public class Node extends sinalgo.nodes.Node {
 		if (uin == myUin) {
 			this.setColor(Color.BLUE);
 			this.root = true;
+			// le leader envoie le SensMessage
+			broadcast(new SensMessage(this));
+			
 			System.out.println(this + " is the leader");
 		} else if (uin > myUin) {
 			System.out.println(this + " forwards " + uin);

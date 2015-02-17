@@ -9,6 +9,22 @@ public class ColorMessage extends Message {
 	private int rootRenvoi = 0; //pour identifier si le root renvoie le message ?
 	                              // si oui 1; sinon 0
 	
+	private int fois = 2;
+	
+	//constructeur
+	public ColorMessage(int uid, int colorID){
+		this.uidoriginal = uid;
+		this.colorID = colorID;
+	}
+	
+	public void setFois(){
+		this.fois --;
+	}
+	
+	public int getFois(){
+		return this.fois;
+	}
+	
 	public void setUidOriginal(int id){
 		this.uidoriginal = id;
 	}
