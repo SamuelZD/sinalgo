@@ -17,15 +17,18 @@ public class Node extends sinalgo.nodes.Node {
 	
 	static final int MAX_UIN = 10000;
 	private int myUin;
-	private int colorID = -1;
+	private int colorID = 0;
 	private boolean root = false; //verifier si je suis root.
-	
-	private int[] arrayColor = new int[5];
+	private int countRecuMsgColorRoot = 0;
+	private int[] arrayColor = new int[6];
+	private int lePlusPetitGrand = MAX_UIN;
+	private int nombreCompare = 0;
+
 	
 	//记录比自己uid大的邻居的数目
-	private int nbGranVoisin=2;
+	//private int nbGranVoisin=2;
 	//记录有几个邻居选择了颜色
-	private int nbColeurChoix=0;
+	//private int nbColeurChoix=0;
 	
 	@Override
 	public void handleMessages(Inbox inbox) {
@@ -71,10 +74,44 @@ public class Node extends sinalgo.nodes.Node {
 			}
 		}
 	}
-	
+
 	private void treat(ColorMessage msg){
 		//si je suis root
-		
+		if(this.root){
+			if(this.countRecuMsgColorRoot == 0){
+				this.countRecuMsgColorRoot ++;
+			}
+			else if(this.countRecuMsgColorRoot == 1){
+				this.broadcast(new ColorMessage(this.myUin,this.colorID));
+			}
+		}
+		//les actions pour tous les noeuds
+		if(msg.getColorID() == 0){
+			this.lePlusPetitGrand = (msg.getUidOriginal()<this.lePlusPetitGrand && msg.getUidOriginal() > this.myUin)
+						?msg.getUidOriginal():this.lePlusPetitGrand;
+			this.nombreCompare++;
+		}
+		this.arrayColor[msg.getColorID()] = 1;
+		if(this.nombreCompare == 2){
+			if(this.lePlusPetitGrand == MAX_UIN || this.lePlusPetitGrand == msg.getUidOriginal()){
+				//choisir le couleur et l'envoie
+				for(int i= 0; i < 6 ;i++){
+					if(this.arrayColor[i] != 1 ){
+						this.colorID = i;
+						break;
+					}
+				}
+				//TODO
+				switch (this.colorID){
+				case 1: this.setColor(Color.BLACK);break;
+				case 2: this.setColor(Color.RED);break;
+				case 3: this.setColor(Color.blue);break;
+				case 4: this.setColor(Color.CYAN);break;
+				case 5: this.setColor(Color.GREEN);break;
+				}
+				broadcast(new ColorMessage(this.myUin, this.colorID));
+			}
+		}
 		
 	}
 		
@@ -144,6 +181,9 @@ public class Node extends sinalgo.nodes.Node {
 	    myUin = rand.nextInt(MAX_UIN); 
 		System.out.println(this + " is initialized. UIN = " + myUin);
 		new MessageTimer(new LcrMessage(myUin)).startRelative(1, this);
+		for(int i = 0; i< 5; i++){
+			this.arrayColor[i] = 0;
+		}
 	}
 
 	@Override

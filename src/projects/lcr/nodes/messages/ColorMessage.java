@@ -5,7 +5,7 @@ import sinalgo.nodes.messages.Message;
 public class ColorMessage extends Message {
 
 	private int uidoriginal = 0;
-	private int colorID = -1 ;
+	private int colorID = 0 ;
 	private int rootRenvoi = 0; //pour identifier si le root renvoie le message ?
 	                              // si oui 1; sinon 0
 	
